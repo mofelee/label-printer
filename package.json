@@ -1,0 +1,11 @@
+{
+  "name": "label-printer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Mofe Lee <mofe@me.com>",
+  "license": "MIT",
+  "dependencies": {
+    "form-data": "^2.3.2",
+    "isomorphic-fetch": "^2.2.1"
+  }
+}
