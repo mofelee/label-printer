@@ -9,6 +9,19 @@ const PARAMETERS_IS_NOT_VALID = new Error('PARAMETERS_IS_NOT_VALID');
 const defaultLineWidth = 0.3;
 const defaultCornerRadius = 1.5;
 
+function formatGetParams(data) {
+  data = data || {};
+  var values = '';
+  for (var key in data) {
+    if (data.hasOwnProperty(key) && data[key] != null) {
+      var element = data[key];
+      values += '&' + key + '=' + data[key];
+    }
+  }
+
+  return values.length > 0 ? values.substr(1) : values;
+}
+
 class LPApi {
   constructor(apiHost) {
     this.apiHost = apiHost || LABEL_PRINTER_HOST;
@@ -41,14 +54,7 @@ class LPApi {
    */
   request(action, data) {
     const url = `http://${this.apiHost}:15216/lpapi/${action}`;
-
-    const formData = new FormData();
-
-    for (var key in data) {
-      if (data.hasOwnProperty(key) && data[key] != null) {
-        formData.append(key, data[key]);
-      }
-    }
+    const formData = formatGetParams(data);
 
     return fetch(url, {
       method: 'post',
@@ -59,6 +65,9 @@ class LPApi {
     })
       .then(res => res.json())
       .then(res => {
+        console.log('==============')
+        console.log(action, data)
+        console.log(res)
         if (res.statusCode !== 0) {
           res.action = action;
           res.data = data;
@@ -701,11 +710,4 @@ class LPApi {
   }
 }
 
-async function run() {
-  const api = new LPApi();
-  const res = await api.isPrinterOnline();
-
-  console.log('xxx', res);
-}
-
-run();
+module.exports = LPApi;
